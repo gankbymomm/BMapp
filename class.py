@@ -1,38 +1,49 @@
-class Person():
-    def __init__(self, firstName, lastName, idNumber):
-        self.firstName = firstName
-        self.lastName = lastName
-        self.idNumber = idNumber
-    def printPerSon(self):
-        print("Name: ", self.firstName + ",", self.lastName)
-        print("IdNumber : ", self.idNumber)
-class Student(Person):
-    def __init__(self, firstName, lastName , idNumber, scores):
-        Person.__init__(self, firstName, lastName, idNumber)
-        self.scores = scores
-    def calculate(self):
-        sm=0
-        for x in range(0, len(scores)):
-            sm= sm + scores[x]
-        avg=sm/len(scores)
-        if (avg < 40):
-            return "T"
-        elif (avg < 55):
-            return "D"
-        elif (avg < 70):
-            return "P"
-        elif (avg < 80 ):
-            return "A"
-        elif (avg < 90):
-            return "E"
-        else:
-            return "O"
-line = input().split()
-firstName= line[0]
-lastName= line[1]
-idNumber= line[2]
-numScores= list(input())
-scores= list(map(int , input().split()))
-s= Student(firstName, lastName, idNumber, scores)
-s.printPerSon()
-print("Grade: ", s.calculate())
+import numpy as np
+from scipy.optimize import minimize
+
+
+def object_fc(x):
+    x1 = x[0]
+    x2 = x[1]
+    x3 = x[2]
+    return 3*x1 + 4*x2 + 5*x3
+
+
+def equality_constrain(x):
+    x1 = x[0]
+    x2 = x[1]
+    x3 = x[2]
+    return 0.1*x1 + 0.2*x2 + 0.3*x3 - 90
+
+
+def equality_constrain1(x):
+    x1 = x[0]
+    x2 = x[1]
+    x3 = x[2]
+    return 0.3*x1 + 0.4*x2 + 0.2*x3 - 130
+
+
+def equality_constrain2(x):
+    x1 = x[0]
+    x2 = x[1]
+    x3 = x[2]
+    return 0.02*x1 + 0.01*x2 + 0.03*x3 - 10
+
+
+bounds_x1 = (0, None)
+bounds_x2 = (0, None)
+bounds_x3 = (0, None)
+
+bnds = [bounds_x1, bounds_x2, bounds_x3]
+
+constraint1 = {'type': 'ineq', 'fun': equality_constrain}
+constraint2 = {'type': 'ineq', 'fun': equality_constrain1}
+constraint3 = {'type': 'ineq', 'fun': equality_constrain2}
+
+constraint = [constraint1, constraint2, constraint3]
+
+x0 = [1, 1, 1]
+
+result = minimize(object_fc, x0, method='SLSQP', bounds=bnds, constraints=constraint)
+
+print(result)
